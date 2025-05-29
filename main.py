@@ -15,6 +15,7 @@ def menu():
 
 if __name__ == "__main__":
     biblioteca = Library("Biblioteca ProDig")
+    biblioteca.cargar_datos()
 
     while True:
         menu()
@@ -24,22 +25,26 @@ if __name__ == "__main__":
             nombre = input("Nombre del usuario: ")
             usuario = User(nombre)
             biblioteca.registrar_usuario(usuario)
+            biblioteca.guardar_datos()
 
         elif opcion == "2":
             titulo = input("Título del libro: ")
             autor = input("Autor: ")
             libro = Book(titulo, autor)
             biblioteca.agregar_libro(libro)
+            biblioteca.guardar_datos()
 
         elif opcion == "3":
             nombre_usuario = input("Nombre del usuario: ")
             titulo_libro = input("Título del libro: ")
             biblioteca.prestar_libro(nombre_usuario, titulo_libro)
+            biblioteca.guardar_datos()
 
         elif opcion == "4":
             nombre_usuario = input("Nombre del usuario: ")
             titulo_libro = input("Título del libro: ")
             biblioteca.devolver_libro(nombre_usuario, titulo_libro)
+            biblioteca.guardar_datos()
 
         elif opcion == "5":
             biblioteca.mostrar_disponibles()

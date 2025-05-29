@@ -1,4 +1,9 @@
 # models/library.py
+import json
+import os
+from models.book import Book
+from models.user import User
+
 class Library:
     def __init__(self, nombre):
         self.nombre = nombre
@@ -59,3 +64,32 @@ class Library:
                 print(libro)
         else:
             print("No hay libros prestados.")
+
+    def guardar_datos(self, ruta_usuarios="usuarios.json", ruta_libros="libros.json"):
+        with open(ruta_usuarios, "w", encoding="utf-8") as f:
+            json.dump({u: [l.titulo for l in usr.libros_prestados] for u, usr in self.usuarios.items()}, f)
+
+        with open(ruta_libros, "w", encoding="utf-8") as f:
+            json.dump([
+                {"titulo": l.titulo, "autor": l.autor, "prestado": l.prestado} for l in self.libros
+            ], f)
+
+    def cargar_datos(self, ruta_usuarios="usuarios.json", ruta_libros="libros.json"):
+        if os.path.exists(ruta_usuarios):
+            with open(ruta_usuarios, "r", encoding="utf-8") as f:
+                usuarios_data = json.load(f)
+                for nombre, libros in usuarios_data.items():
+                    usr = User(nombre)
+                    self.usuarios[nombre] = usr
+
+        if os.path.exists(ruta_libros):
+            with open(ruta_libros, "r", encoding="utf-8") as f:
+                libros_data = json.load(f)
+                for l in libros_data:
+                    libro = Book(l["titulo"], l["autor"])
+                    libro.prestado = l["prestado"]
+                    self.libros.append(libro)
+                    if libro.prestado:
+                        for usuario in self.usuarios.values():
+                            if libro.titulo in [b.titulo for b in usuario.libros_prestados]:
+                                usuario.prestar_libro(libro)
