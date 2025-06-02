@@ -6,6 +6,18 @@ from models.user import User
 st.set_page_config(page_title="Biblioteca ProDig")
 st.title("📚 Biblioteca Virtual ProDig")
 
+# Añade esto al inicio:
+def mostrar_libros(libros, titulo):
+    if libros:
+        st.subheader(titulo)
+        cols = st.columns(3)
+        for i, libro in enumerate(libros):
+            cols[i % 3].write(f"📖 **{libro.titulo}**\n*{libro.autor}*")
+    else:
+        st.warning(f"No hay {titulo.lower()}.")
+
+# Usa esta función en las secciones de libros disponibles/prestados.
+
 # Cargar y mantener la biblioteca en sesión
 if "biblioteca" not in st.session_state:
     st.session_state.biblioteca = Library("Biblioteca ProDig")

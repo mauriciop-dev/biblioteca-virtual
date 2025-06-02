@@ -5,6 +5,16 @@ from models.book import Book
 from models.user import User
 
 class Library:
+
+    # Añade al inicio de la clase Library:
+    def _cargar_o_crear_archivo(self, ruta):
+        if not os.path.exists(ruta):
+            with open(ruta, "w", encoding="utf-8") as f:
+                json.dump([] if "libros" in ruta else {}, f)
+        return open(ruta, "r+", encoding="utf-8")
+
+# Cambia guardar_datos y cargar_datos para usar este método.
+
     def __init__(self, nombre):
         self.nombre = nombre
         self.libros = []
